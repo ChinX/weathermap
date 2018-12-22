@@ -1,0 +1,160 @@
+##################################################################################################
+# forecast service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: forecast
+  labels:
+    app: forecast
+spec:
+  ports:
+  - port: 8081
+    name: http
+  selector:
+    app: forecast
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: forecast-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: forecast
+        version: v1
+    spec:
+      containers:
+      - name: forecast
+        image: forecast:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
+---
+##################################################################################################
+# weather service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: weather
+  labels:
+    app: weather
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: weather
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: weather-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: weather
+        version: v1
+    spec:
+      containers:
+      - name: weather
+        image: weather:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: weather-v2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: weather
+        version: v2
+    spec:
+      containers:
+      - name: weather
+        image: weather:2.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+##################################################################################################
+# fusionweather services
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: fusionweather
+  labels:
+    app: fusionweather
+spec:
+  ports:
+  - port: 8082
+    name: http
+  selector:
+    app: fusionweather
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: fusionweather-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fusionweather
+        version: v1
+    spec:
+      containers:
+      - name: fusionweather
+        image: fusionweather:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8082
+---
+##################################################################################################
+# weathermapweb services
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: weathermapweb
+  labels:
+    app: weathermapweb
+spec:
+  ports:
+    - port: 3000
+      name: http
+  selector:
+    app: weathermapweb
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: weathermapweb-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: weathermapweb
+        version: v1
+    spec:
+      containers:
+      - name: weathermapweb
+        image: weathermapweb:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+---
